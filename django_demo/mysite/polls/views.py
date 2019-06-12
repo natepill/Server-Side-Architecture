@@ -3,11 +3,16 @@ from .models import Question
 
 # Create your views here.
 from django.http import HttpResponse
+from django.template import loader
+
 
 def index(request):
     latest_question_list = Question.objects.order_by('-pub_date')[:5]
-    output = ', '.join([q.question_text for q in latest_question_list])
-    return HttpResponse(output)
+    template = loader.get_template('polls/index.html')
+    context = {
+        'latest_question_list': latest_question_list
+    }
+    return HttpResponse(template.render(context, request))
     # To call the view, we need to map it to a URL - and for this we need a URLconf.
 
 def detail(request, question_id):
