@@ -1,10 +1,13 @@
 from django.shortcuts import render
+from .models import Question
 
 # Create your views here.
 from django.http import HttpResponse
 
 def index(request):
-    return HttpResponse("Successful HttpResponse! This is polling index page!")
+    latest_question_list = Question.objects.order_by('-pub_date')[:5]
+    output = ', '.join([q.question_text for q in latest_question_list])
+    return HttpResponse(output)
     # To call the view, we need to map it to a URL - and for this we need a URLconf.
 
 def detail(request, question_id):
