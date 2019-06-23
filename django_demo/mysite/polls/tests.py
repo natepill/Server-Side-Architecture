@@ -3,7 +3,7 @@ import datetime
 from django.test import TestCase
 from django.utils import timezone
 from django.urls import reverse
-from .models import Question
+from .models import Question, Choice,
 
 def create_question(question_text, days):
     """
@@ -15,7 +15,8 @@ def create_question(question_text, days):
     time = timezone.now() + datetime.timedelta(days=days)
     return Question.objects.create(question_text=question_text, pub_date=time)
 
-
+def add_vote_to_choice(choice):
+    choice.votes += 1
 
 
 
@@ -140,3 +141,10 @@ class QuestionDetailViewTests(TestCase):
         url = reverse('polls:detail', args=(past_question.id,))
         response = self.client.get(url)
         self.assertContains(response, past_question.question_text)
+
+
+class QuestionResultViewTests(TestCase):
+
+    def test_votes_for_choice(self):
+
+        new_question = create_question(question_text='Testing that voting for choices work?')
